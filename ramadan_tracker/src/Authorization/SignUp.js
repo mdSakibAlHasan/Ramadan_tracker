@@ -1,6 +1,25 @@
-import React from "react";
+import React,{useState} from "react";
 
 export default function SignUp() {
+  const[inputs,setInputs]= useState({
+    name: "",
+    phone: "",
+    gender: "",
+    address: "",
+    password: "",
+    email: "",
+
+  });
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const submitForm = ()=>{
+    console.log(inputs)
+  }
+
+
   return (
     <div className="shade1 full_page">
       <div className="shade2 p-5">
@@ -21,6 +40,7 @@ export default function SignUp() {
                   id="q1"
                   placeholder="আপনার নাম দিন"
                   name="name"
+                  onChange={handleChange}
                 />
               </div>{" "}
               <hr />
@@ -34,6 +54,7 @@ export default function SignUp() {
                   id="q2"
                   placeholder="আপনার মোবাইল নম্বর দিন"
                   name="phone"
+                  onChange={handleChange}
                 />
               </div>{" "}
               <hr />
@@ -50,6 +71,7 @@ export default function SignUp() {
                   id="q4"
                   placeholder="আপনার ঠিকানা দিন"
                   name="address"
+                  onChange={handleChange}
                 />
               </div>{" "}
               <hr />
@@ -61,7 +83,7 @@ export default function SignUp() {
                 <div className="row">
                   <div className="col">
                     পুরুষঃ
-                    <input type="checkbox" id="q3" name="gender" value="male" />
+                    <input type="checkbox" id="q3" name="gender" value="male" onChange={handleChange}/>
                   </div>
                   <div className="col">
                     নারীঃ
@@ -70,6 +92,7 @@ export default function SignUp() {
                       id="q3"
                       name="gender"
                       value="female"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -89,6 +112,7 @@ export default function SignUp() {
                 id="q5"
                 placeholder="আপনার ই-মেইল দিন"
                 name="email"
+                onChange={handleChange}
               />
             </div>{" "}
             <div className="col">
@@ -102,6 +126,7 @@ export default function SignUp() {
                   id="q6"
                   placeholder="আপনার পাসওয়ার্ড দিন"
                   name="password"
+                  onChange={handleChange}
                 />
               </div>{" "}
             </div>
@@ -126,6 +151,7 @@ export default function SignUp() {
               className="shade1 p-2"
               type="submit"
               value="অ্যাকাউন্ট তৈরি করুন"
+              onClick={submitForm}
             />
           </center>
         </form>
