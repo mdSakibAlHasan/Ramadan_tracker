@@ -1,0 +1,8 @@
+button{
+    width: 100%;
+    border: none;
+    color:white;
+}
+.display-block{
+    display:inline-block;
+}

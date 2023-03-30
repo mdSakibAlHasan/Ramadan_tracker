@@ -1,0 +1,41 @@
+.full_page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.full_page_short {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:90vh;
+}
+.full_page_height {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 150vh; */
+}
+.img_bg{
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.image-0 {
+    background-image: url('../img1.jpg');
+  }
+  
+  .image-1 {
+    background-image: url('../img2.jpg');
+  }
+  
+  .image-2 {
+    background-image: url('../img3.jpg');
+  }
+  
+  .image-3 {
+    background-image: url('../img4.jpg');
+  }
+  
+  .image-4 {
+    background-image: url('../img5.jpg');
+  }

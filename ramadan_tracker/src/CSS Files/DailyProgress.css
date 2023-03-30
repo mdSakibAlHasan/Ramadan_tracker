@@ -1,0 +1,24 @@
+.float_left{
+    float: left;
+}
+.personal_info{
+    background-color:#144272;
+}
+.ramadan_info{
+    background-color: #0A2647;
+    height:min-content;
+}
+
+.full_body{
+    /* display: block; */
+}
+
+.checkpoints{
+    background-color: #205295;
+}
+input,textarea{
+    background: transparent;
+    border: transparent;
+    color: white;
+    /* border-style: dashed; */
+}
