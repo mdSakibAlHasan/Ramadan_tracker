@@ -3,6 +3,7 @@ import '../CSS Files/Colors.css'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
+import Navber from '../Navber';
 
 export default function Login() {
 
@@ -23,6 +24,7 @@ export default function Login() {
         try{
            const res =  await axios.post("http://localhost:3002/api/login",inputs);
             Cookies.set(res.data, 'my_cookies', { expires: 1 });
+            Navber.handleRefresh();
             navigate("/profile");
         }catch(err){
             setErr(err);
