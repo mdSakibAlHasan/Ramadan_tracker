@@ -9,11 +9,29 @@ import express from "express";
 // app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 
+
+const create_progress = (email)=>{
+  var qur = `select UserID from ramadan.users where Email='${email}';`;
+  db.query(qur,function(err,result){
+    if(err){
+      console.log("Something happend to insert progress");
+    }
+    else{
+      for(let i=1;i<=30;i++){
+        qur = `INSERT INTO ramadan.progress (ID, Ramadan, FazarFaraz, FazarSuunat, ZohorFaraz, ZohorSunnat, AsarFaraz, AsarSunnat, MagribFaraz, MagribSunnat, EshaFaraz, EshaSunnat, Tarabih, Tahazzud, Nafal, Zikir, Dua, Istigfar, Hadis, Dan, Jamayat, Khoma, NotunSekha) VALUES (${result[0].UserID}, ${i}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
+        db.query(qur);
+      }
+      
+      //console.log("Added data in progress",result[0].UserID)
+    }
+  });
+}
+
 export const signup = (req, res) => {
   const { name, phone, gender, address, password, email } = req.body;
   const salt = bcrypt.genSaltSync(10);
   const pass = bcrypt.hashSync(password, salt);
-  var qur = `select name from ramadan.users where email='${email}';`;
+  var qur = `select Name from ramadan.users where Email='${email}';`;
   db.query(qur,function(err,result){
     if(err){
       console.log("Something happend for check user");
@@ -32,6 +50,8 @@ export const signup = (req, res) => {
             return res.status(409).json("Something happend to create users");
           }
           else{
+            //console.log(result);
+            create_progress(email);
             return res.status(200).json("successfull");
           }
         });

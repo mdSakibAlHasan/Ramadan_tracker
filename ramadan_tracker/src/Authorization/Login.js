@@ -20,9 +20,10 @@ export default function Login() {
 
     const submitForm = async (e)=>{
         e.preventDefault();
-        console.log(inputs," data here")
+        console.log(inputs," data here for input type")
         try{
            const res =  await axios.post("http://localhost:3002/api/login",inputs);
+           console.log(res.data);
             Cookies.set(res.data, 'my_cookies', { expires: 1 });
             Navber.handleRefresh();
             navigate("/profile");

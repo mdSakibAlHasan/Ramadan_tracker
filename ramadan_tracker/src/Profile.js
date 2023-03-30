@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import Footer from './Footer';
+import { getCookie,getAsynCookie } from './Authorization/Cookie_handle';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
     const [name,setname]=useState();
@@ -13,6 +16,7 @@ export default function Profile() {
     const [namazPercentage,setnamazPercentage]=useState([{name:'Namaz',value:80},{name:'Namaz',value:20}]);
     const [quranPercentage,setquranPercentage]=useState([{name:'Namaz',value:70},{name:'Namaz',value:30}]);
     const [otherPercentage,setotherPercentage]=useState([{name:'Namaz',value:86},{name:'Namaz',value:14}]);
+    const [profileArr, setprofileArr]=useState([]);
 
     const [chart1Data, setChart1Data] = useState({});
     const [chart2Data, setChart2Data] = useState({});
@@ -25,13 +29,41 @@ export default function Profile() {
         { name: 'Group D', value: 200 },
       ];
       const COLORS = ['#144272', '#ffffff09', '#FFBB28', '#FF8042'];
-    
+      const[inputs,setInputs]= useState({
+        ID: "",
+      });
+      var ID;
 
+
+      useEffect(() => {
+        function handleCookie(){
+            ID = getCookie('my_cookies');
+            inputs.ID = ID;
+        };
+        handleCookie();
+      }, []); 
+    
+    
+      const navigate = useNavigate();
     useEffect(() => {
-        const x1values=["Namaz"];
-        const x2values=["Quran"];
-        const x3values=["Other Activities"];
-        const barColors = ["#b91d47"];
+        const handleInfo = async()=>{
+            // const ID = getCookie();
+            // inputs.ID = ID;
+            console.log(inputs.ID," in cookies")
+            if(inputs.ID){
+            const info = await axios.post("http://localhost:3002/api/getProfileInfo",inputs);
+            setprofileArr(info.data);
+            console.log(profileArr);
+            }
+            else{
+                navigate("/login");
+            }
+        }
+        
+        // const x1values=["Namaz"];
+        // const x2values=["Quran"];
+        // const x3values=["Other Activities"];
+        // const barColors = ["#b91d47"];
 
         setname("ফাহিম মাহমুদ");
         setaddress("আজিমপুর");
@@ -57,7 +89,8 @@ export default function Profile() {
         //       data: namazPercentage
         //     }]
         //   });
-        }, []);
+        handleInfo();
+        }, [inputs.ID]);
 
   return (
     <>
@@ -163,3 +196,32 @@ export default function Profile() {
     </>
   )
 }
+
+
+// INSERT INTO ramadan.progress  VALUES (
+//     1,
+//       true,
+//       false,
+//       true,
+//       true,
+//       true,
+//       false,
+//       true,
+//       false,
+//       true,
+//       true,
+//       'Page 1',
+//       'Ayat 1',
+//       true,
+//       false,
+//       true,
+//       true,
+//       false,
+//       true,
+//       false,
+//       true,
+//       true,
+//       false,
+//       true
+//     );
+    
