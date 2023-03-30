@@ -3,8 +3,9 @@ import bcrypt from "bcryptjs";
 
 
 export const signup = (req, res) => {
-
-    console.log(req.body);
+    console.log("come");
+    const data = req.body;
+    console.log(data);
     // var qur = "select * from login;";
     // db.query(qur,function(err,result){
     //   if(err)

@@ -1,4 +1,5 @@
 import React,{useState} from "react";
+import axios from "axios";
 
 export default function SignUp() {
   const[inputs,setInputs]= useState({
@@ -10,12 +11,23 @@ export default function SignUp() {
     email: "",
 
   });
+  const[err,serErr] = useState();
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const submitForm = ()=>{
+  const submitForm = async (e)=>{
+    try{
+      // console.log(inputs," in function");
+      // alert(inputs.name);
+      // await axios.post("http://localhost:3002/");
+      // console.log("after this")
+      // alert(inputs.name);
+      await axios.post("http://localhost:3002/api/signup",inputs);
+    }catch(err){
+        alert("error");
+    }
     console.log(inputs)
   }
 
@@ -147,12 +159,13 @@ export default function SignUp() {
           </div>
           <hr />
           <center>
-            <input
+            {/* <input
               className="shade1 p-2"
               type="submit"
               value="অ্যাকাউন্ট তৈরি করুন"
               onClick={submitForm}
-            />
+            /> */}
+            <button onClick={submitForm}>Register</button>
           </center>
         </form>
       </div>
