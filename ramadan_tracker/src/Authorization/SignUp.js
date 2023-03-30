@@ -1,5 +1,6 @@
 import React,{useState} from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const[inputs,setInputs]= useState({
@@ -12,21 +13,26 @@ export default function SignUp() {
 
   });
   const[err,serErr] = useState();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const submitForm = async (e)=>{
+    e.preventDefault();
+    console.log(inputs," data here")
     try{
-      // console.log(inputs," in function");
+       console.log(inputs," in function");
       // alert(inputs.name);
       // await axios.post("http://localhost:3002/");
       // console.log("after this")
       // alert(inputs.name);
       await axios.post("http://localhost:3002/api/signup",inputs);
+      console.log(inputs," data here-------------")
+      navigate("/login");
     }catch(err){
-        alert("error");
+        alert(err);
     }
     console.log(inputs)
   }
@@ -35,7 +41,7 @@ export default function SignUp() {
   return (
     <div className="shade1 full_page">
       <div className="shade2 p-5">
-        <form>
+        <form onSubmit={submitForm} method="POST">
           <center>
             <h4>সাইন-আপ</h4>
           </center>{" "}
@@ -159,13 +165,13 @@ export default function SignUp() {
           </div>
           <hr />
           <center>
-            {/* <input
+            <input
               className="shade1 p-2"
               type="submit"
               value="অ্যাকাউন্ট তৈরি করুন"
               onClick={submitForm}
-            /> */}
-            <button onClick={submitForm}>Register</button>
+            />
+            {/* <button onClick={submitForm}>Register</button> */}
           </center>
         </form>
       </div>
