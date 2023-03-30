@@ -1,5 +1,6 @@
 import { db } from "../db.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import bodyParser from "body-parser";
 import express from "express";
 
@@ -36,39 +37,41 @@ export const signup = (req, res) => {
         });
       }
     }
-    });
-    
-    //var data = `INSERT INTO ramadan.users (Name, Gender, Address, Phone, Email, Password) VALUES ('${name}', '${gender}', '${address}', '${phone}', '${email}', '${password}');`;
-    // var qur = "select * from login;";
-    // db.query(qur,function(err,result){
-    //   if(err)
-    //     console.log("Something happend for check user");
-    //   else{
-    //     if(check_user(result,email)){
-    //       console.log("user exits")
-    //       return res.status(409).json("User already exists! ");
-    //     }
-    //     else{
-    //       const rand_num = getRandomInt(9999999).toString();
-    //       const salt = bcrypt.genSaltSync(10);
-    //      const pass = bcrypt.hashSync(rand_num, salt);
-    //       console.log(pass);
-    //       const body = `${rand_num} is your onetime password to log in the website. Please don't share this with other`
-    //       //send_mail(email,"one time password for login",body)
-  
-    //       const qu = `insert into login(ID,email,password,type,isFirst) values('${ID}','${email}','${pass}','researcher',1);`
-    //       db.query(qu,function(err,result){
-    //       if(err){
-    //         console.log("Something happend to insert data");
-    //         return res.status(409).json("not able to insert data");
-    //       }
-    //       else{
-    //         console.log("Data inserted");
-    //         return res.status(200).json("User has been created.");
-    //       }
-    //       });
-    //     }
-    //   }
-    // });
-  
+    }); 
   };
+
+
+  export const login = (req, res) => {
+    const { password, email } = req.body;
+
+    const q = "SELECT Email,Password FROM ramadan.users WHERE Email = ?";
+  
+
+  db.query(q, [req.body.email], (err, data) => {
+    console.log(data)
+    console.log("here in backend");
+    //console.log(data[0].password)
+    if (err) return res.status(500).json(err);
+    if (data.length === 0) 
+      return res.status(404).json("User not found!");
+    else{
+      const isPasswordCorrect = bcrypt.compareSync(
+        req.body.password,
+        data[0].Password
+      );
+  
+    
+      if (!isPasswordCorrect)
+        return res.status(400).json("Wrong email or password!");
+        {
+        // const myCookie = req.cookies.mycookie;
+        // console.log(myCookie)
+        const token = jwt.sign({ Email: data[0].Email }, "jwtkey");
+        console.log(token)
+        //res.sent(token)
+        res.status(200).json(token);
+        }
+    }
+
+  });
+  }  

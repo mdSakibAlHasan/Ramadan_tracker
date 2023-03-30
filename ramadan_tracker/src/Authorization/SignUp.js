@@ -12,7 +12,7 @@ export default function SignUp() {
     email: "",
 
   });
-  const[err,serErr] = useState();
+  const[err,setErr] = useState();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,16 +23,10 @@ export default function SignUp() {
     e.preventDefault();
     console.log(inputs," data here")
     try{
-       console.log(inputs," in function");
-      // alert(inputs.name);
-      // await axios.post("http://localhost:3002/");
-      // console.log("after this")
-      // alert(inputs.name);
       await axios.post("http://localhost:3002/api/signup",inputs);
-      console.log(inputs," data here-------------")
       navigate("/login");
     }catch(err){
-        alert(err);
+        setErr(err);
     }
     console.log(inputs)
   }
@@ -165,6 +159,7 @@ export default function SignUp() {
           </div>
           <hr />
           <center>
+            <p> err</p>
             <input
               className="shade1 p-2"
               type="submit"
