@@ -13,6 +13,7 @@ export default function Profile() {
     const [email,setemail]=useState();
     const [gender,setgender]=useState();
     const [aboutme,setaboutme]=useState();
+    const [err,setErr] = useState();
     const [namazPercentage,setnamazPercentage]=useState([{name:'Namaz',value:80},{name:'Namaz',value:20}]);
     const [quranPercentage,setquranPercentage]=useState([{name:'Namaz',value:70},{name:'Namaz',value:30}]);
     const [otherPercentage,setotherPercentage]=useState([{name:'Namaz',value:86},{name:'Namaz',value:14}]);
@@ -47,13 +48,17 @@ export default function Profile() {
       const navigate = useNavigate();
     useEffect(() => {
         const handleInfo = async()=>{
-            // const ID = getCookie();
-            // inputs.ID = ID;
             console.log(inputs.ID," in cookies")
             if(inputs.ID){
-            const info = await axios.post("http://localhost:3002/api/getProfileInfo",inputs);
-            setprofileArr(info.data);
-            console.log(profileArr);
+                try{
+                    ID = await axios.post("http://localhost:3002/api/getProfileInfo",inputs);
+                    console.log(ID," is info");
+                    setprofileArr(ID.data);
+                    console.log(profileArr," is data arr");
+                }catch(err){
+                    setErr("Unable to get Info");
+                }
+            
             }
             else{
                 navigate("/login");
@@ -65,12 +70,12 @@ export default function Profile() {
         // const x3values=["Other Activities"];
         // const barColors = ["#b91d47"];
 
-        setname("ফাহিম মাহমুদ");
-        setaddress("আজিমপুর");
-        setphone("০১৩০৮২৬৭৮৮৩");
-        setemail("mammud.fahim1231@gmail.com");
-        setgender("পুরুষ");
-        setaboutme("Lorem ipsum dolor sit amet consectetur adipisicing elit. A, quam tempore quisquam repellat autem nobis nostrum laboriosam maiores, ea, veritatis odio ad recusandae. Voluptate dolorum voluptatibus consectetur dolor. Tenetur, officia recusandae, suscipit quisga accusamus dolorem autem. Error neque esse doloremque alias. Doloremque nam voluptas distinctio quam sapiente numquam accusantium?");
+        setname(profileArr[0].Name);
+        setaddress(profileArr[0].Address);
+        setphone(profileArr[0].Phone);
+        setemail(profileArr[0].Email);
+        setgender(profileArr[0].Gender);
+        setaboutme(profileArr[0].AboutMe);
         // setnamazPercentage([...namazPercentage, 92]);
         // setquranPercentage([...quranPercentage, 42]);
         // setotherPercentage([...otherPercentage, 22]);
