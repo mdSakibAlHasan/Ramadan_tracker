@@ -6,7 +6,7 @@ import { getCookie,getAsynCookie } from './Authorization/Cookie_handle';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
-export default function Profile() {
+export default function Profile( ) {
     const [name,setname]=useState();
     const [address,setaddress]=useState();
     const [phone,setphone]=useState();
@@ -14,6 +14,9 @@ export default function Profile() {
     const [gender,setgender]=useState();
     const [aboutme,setaboutme]=useState();
     const [err,setErr] = useState();
+    const [chartArr, setChartArr] = useState([])
+    const [time, setTime] = useState(new Date());
+    const [date, setDate] = useState(time.getDate());
     const [namazPercentage,setnamazPercentage]=useState([{name:'Namaz',value:80},{name:'Namaz',value:20}]);
     const [quranPercentage,setquranPercentage]=useState([{name:'Namaz',value:70},{name:'Namaz',value:30}]);
     const [otherPercentage,setotherPercentage]=useState([{name:'Namaz',value:86},{name:'Namaz',value:14}]);
@@ -32,6 +35,7 @@ export default function Profile() {
       const COLORS = ['#144272', '#ffffff09', '#FFBB28', '#FF8042'];
       const[inputs,setInputs]= useState({
         ID: "",
+        UserID: "",
       });
       var ID;
 
@@ -43,6 +47,19 @@ export default function Profile() {
         };
         handleCookie();
       }, []); 
+
+
+      function getRamadanDay(month,day,value){
+        //let rDay,exten;
+        let t,p;
+        if(month==3)
+            t = (day-23);
+        else 
+            t = (day+8);
+    
+        p = (value/t);
+        return p;
+      }
     
     
       const navigate = useNavigate();
@@ -55,6 +72,12 @@ export default function Profile() {
                     console.log(ID," is info");
                     setprofileArr(ID.data);
                     console.log(profileArr," is data arr");
+                    inputs.UserID = profileArr[0].UserID;
+
+                    ID = await axios.post("http://localhost:3002/api/getChartInfo",inputs);
+                     //console.log(ID," is info from namaz");
+                     setChartArr(ID.data);
+                    console.log(" complete", chartArr);
                 }catch(err){
                     setErr("Unable to get Info");
                 }
@@ -74,10 +97,13 @@ export default function Profile() {
             setaboutme(profileArr[0].AboutMe);
         }
         
-        // setnamazPercentage([...namazPercentage, 92]);
-        // setquranPercentage([...quranPercentage, 42]);
-        // setotherPercentage([...otherPercentage, 22]);
-       
+        //getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])
+        //setnamazPercentage([...namazPercentage, getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])]);
+        if(chartArr.length!=0){
+        setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
+        setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
+        setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
+        }
         console.log(namazPercentage);
         // setnamazPercentage(addElement(namazPercentage,92));
         // setquranPercentage(addElement(quranPercentage,43));

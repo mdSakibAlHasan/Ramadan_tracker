@@ -31,7 +31,7 @@ function App() {
         <Route path="/" element={<HomePage/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<SignUp/>}/>
-        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/profile" element={<Profile />}/>
         <Route path="/ramadanInfo" element={<RamadanInfo/>}/>
         <Route path="/feeds" element={<FeedPage/>}/>
         <Route path="/progress" element={<DailyProgress getRamadanDay={getRamadanDay}/>}/>

@@ -37,8 +37,8 @@ export default function DailyProgress({ getRamadanDay }) {
   const[eshaFarazisChecked,seteshaFarazisChecked]=useState(false);
   const[eshaSunnatisChecked,seteshaSunnatisChecked]=useState(false);
 
-  const [quranPage,setquranPage] = useState();
-  const [QuranAyat, setquranAyat] = useState('');
+  const [QuranPage,setquranPage] = useState(0);
+  const [QuranAyat, setquranAyat] = useState(null);
 
   const[tarabihisChecked,settarabihisChecked]=useState(false);
   const[tahazzudisChecked,settahazzudisChecked]=useState(false);
@@ -53,8 +53,17 @@ export default function DailyProgress({ getRamadanDay }) {
   const[khomaisChecked,setkhomaisChecked]=useState(false);
   const[notunsekhaisChecked,setnotunsekhaisChecked]=useState(false);
 
-  function handleDay() {
+  const handleRefresh = async() => {
+    await handleInfo();
+    handleSetInfo();
+  };
+
+  async function handleDay() {
+    inputs.rDay = inputs.rDay -1;
     setDate(date - 1);
+    await handleInfo();
+    handleSetInfo();
+    handleRefresh();
   }
 
   function ramadanDayInfo() {
@@ -72,56 +81,33 @@ export default function DailyProgress({ getRamadanDay }) {
       return true;
   }
 
-  
-  
+  const handleInfo = async()=>{
+    console.log(inputs.ID," in cookies")
+    if(inputs.ID){
+        try{
+            ID = await axios.post("http://localhost:3002/api/getProfileInfo",inputs);
+            console.log(ID," is info");
+            setprofileArr(ID.data);
+            console.log(profileArr," is data arr");
 
-  useEffect(() => {
-    function handleCookie(){
-        ID = getCookie('my_cookies');
-        inputs.ID = ID;
-        rDay =getRamadanDay(time.getMonth() + 1, date);
-        inputs.rDay = rDay;
-    };
-    handleCookie();
-  }, []); 
-
-
-  const navigate = useNavigate();
-useEffect(() => {
-    const handleInfo = async()=>{
-        console.log(inputs.ID," in cookies")
-        if(inputs.ID){
-            try{
-                ID = await axios.post("http://localhost:3002/api/getProfileInfo",inputs);
-                console.log(ID," is info");
-                setprofileArr(ID.data);
-                console.log(profileArr," is data arr");
-
-                inputs.UserID = profileArr[0].UserID;
-                rDay = await axios.post("http://localhost:3002/api/getProgressInfo",inputs);
-                console.log(rDay," is progress info");
-                setprogressArr(rDay.data);
-                console.log(progressArr," is data arr");
-            }catch(err){
-                setErr("Unable to get Info");
-            }
-        
+            inputs.UserID = profileArr[0].UserID;
+            rDay = await axios.post("http://localhost:3002/api/getProgressInfo",inputs);
+            console.log(rDay," is progress info");
+            setprogressArr(rDay.data);
+            console.log(progressArr," is data arr");
+        }catch(err){
+            setErr("Unable to get Info");
         }
-        else{
-            navigate("/login");
-        }
-    }
-
-
-
-    if(profileArr.length != 0){
-      setName(profileArr[0].Name);
-      setaddress(profileArr[0].Address);
-      setphone(profileArr[0].Phone);
-      UserID = profileArr[0].UserID;
-    }
     
-    if(progressArr.length != 0){
+    }
+    else{
+        navigate("/login");
+    }
+  }
+
+    function handleSetInfo(){
+      if(progressArr.length != 0){
+      UserID = progressArr[0].ID;
       setfazarFarazisChecked(setBoolean(progressArr[0].FazarFaraz));
       setfazarSunnatisChecked(setBoolean(progressArr[0].FazarSuunat));
       setzohorFarazisChecked(setBoolean(progressArr[0].ZohorFaraz));
@@ -147,47 +133,40 @@ useEffect(() => {
       setjamayatisChecked(setBoolean(progressArr[0].Jamayat))
       setkhomaisChecked(setBoolean(progressArr[0].Khoma))
       setnotunsekhaisChecked(setBoolean(progressArr[0].NotunSekha))
+      }
     }
-    
-    
-    handleInfo();
+  
+
+  useEffect(() => {
+    function handleCookie(){
+        ID = getCookie('my_cookies');
+        inputs.ID = ID;
+        rDay =getRamadanDay(time.getMonth() + 1, date);
+        inputs.rDay = rDay;
+    };
+    handleCookie();
+  }, []); 
+
+
+  const navigate = useNavigate();
+  useEffect(() => {
+
+      handleInfo();
+      if(profileArr.length != 0){
+        setName(profileArr[0].Name);
+        setaddress(profileArr[0].Address);
+        setphone(profileArr[0].Phone);
+        //UserID = profileArr[0].UserID;
+      }
+      handleSetInfo()
     }, [inputs.ID]);
 
     useEffect(() => {
-      function handleSetInfo(){
-        if(progressArr.length != 0){
-        setfazarFarazisChecked(setBoolean(progressArr[0].FazarFaraz));
-        setfazarSunnatisChecked(setBoolean(progressArr[0].FazarSuunat));
-        setzohorFarazisChecked(setBoolean(progressArr[0].ZohorFaraz));
-        setzohorSunnatisChecked(setBoolean(progressArr[0].ZohorSunnat))
-        setasarFarazisChecked(setBoolean(progressArr[0].AsarFaraz))
-        setasarSunnatisChecked(setBoolean(progressArr[0].AsarSunnat))
-        setmagribFarazisChecked(setBoolean(progressArr[0].MagribFaraz))
-        setmagribSunnatisChecked(setBoolean(progressArr[0].MagribSunnat))
-        seteshaFarazisChecked(setBoolean(progressArr[0].EshaFaraz))
-        seteshaSunnatisChecked(setBoolean(progressArr[0].EshaSunnat))
-        
-        // setquranPage(setBoolean(progressArr[0].QuranPage))
-        // setquranAyat(setBoolean(progressArr[0].QuranAyat))
-  
-        settarabihisChecked(setBoolean(progressArr[0].Tarabih))
-        settahazzudisChecked(setBoolean(progressArr[0].Tahazzud))
-        setnafalisChecked(setBoolean(progressArr[0].Nafal))
-        setzikirisChecked(setBoolean(progressArr[0].Zikir))
-        setduaisChecked(setBoolean(progressArr[0].Dua))
-        setistigfarisChecked(setBoolean(progressArr[0].Istigfar))
-        sethadisisChecked(setBoolean(progressArr[0].Hadis))
-        setdanisChecked(setBoolean(progressArr[0].Dan))
-        setjamayatisChecked(setBoolean(progressArr[0].Jamayat))
-        setkhomaisChecked(setBoolean(progressArr[0].Khoma))
-        setnotunsekhaisChecked(setBoolean(progressArr[0].NotunSekha))
-        }
-      };
       handleSetInfo();
     }, [progressArr.length !=0]); 
 
     const personalInfo = {
-      UserID,
+      ID: inputs.UserID,
       Ramadan: inputs.rDay,
       fazarFarazisChecked,
       fazarSunnatisChecked,
@@ -199,7 +178,7 @@ useEffect(() => {
       magribSunnatisChecked,
       eshaFarazisChecked,
       eshaSunnatisChecked,
-      quranPage,
+      QuranPage,
       QuranAyat,
       tarabihisChecked,
       tahazzudisChecked,
@@ -219,6 +198,7 @@ useEffect(() => {
 
     const handleSubmit = async (e)=>{
       e.preventDefault();
+      console.log(ID," ID")
       alert(personalInfo);
       console.log("Info",personalInfo);
       //handleInfo();
