@@ -19,7 +19,6 @@ export const getProgressInfo = (req,res)=>{
 }
 
 export const setProgressInfo = (req,res)=>{
-    //const { ID, UserID ,rDay } = req.body;
     console.log(" is here in det progress ",req.body);
 
 

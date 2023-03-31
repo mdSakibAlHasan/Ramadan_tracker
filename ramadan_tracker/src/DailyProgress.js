@@ -22,36 +22,36 @@ export default function DailyProgress({ getRamadanDay }) {
   });
   var ID,rDay,UserID;
 
-  const[fazarFarazisChecked,setfazarFarazisChecked]=useState();
-  const[fazarSunnatisChecked,setfazarSunnatisChecked]=useState();
+  const[fazarFarazisChecked,setfazarFarazisChecked]=useState(false);
+  const[fazarSunnatisChecked,setfazarSunnatisChecked]=useState(false);
 
-  const[zohorFarazisChecked,setzohorFarazisChecked]=useState();
-  const[zohorSunnatisChecked,setzohorSunnatisChecked]=useState();
+  const[zohorFarazisChecked,setzohorFarazisChecked]=useState(false);
+  const[zohorSunnatisChecked,setzohorSunnatisChecked]=useState(false);
 
-  const[asarFarazisChecked,setasarFarazisChecked]=useState();
-  const[asarSunnatisChecked,setasarSunnatisChecked]=useState();
+  const[asarFarazisChecked,setasarFarazisChecked]=useState(false);
+  const[asarSunnatisChecked,setasarSunnatisChecked]=useState(false);
 
-  const[magribFarazisChecked,setmagribFarazisChecked]=useState();
-  const[magribSunnatisChecked,setmagribSunnatisChecked]=useState();
+  const[magribFarazisChecked,setmagribFarazisChecked]=useState(false);
+  const[magribSunnatisChecked,setmagribSunnatisChecked]=useState(false);
 
-  const[eshaFarazisChecked,seteshaFarazisChecked]=useState();
-  const[eshaSunnatisChecked,seteshaSunnatisChecked]=useState();
+  const[eshaFarazisChecked,seteshaFarazisChecked]=useState(false);
+  const[eshaSunnatisChecked,seteshaSunnatisChecked]=useState(false);
 
   const [quranPage,setquranPage] = useState();
   const [QuranAyat, setquranAyat] = useState('');
 
-  const[tarabihisChecked,settarabihisChecked]=useState();
-  const[tahazzudisChecked,settahazzudisChecked]=useState();
-  const[nafalisChecked,setnafalisChecked]=useState();
+  const[tarabihisChecked,settarabihisChecked]=useState(false);
+  const[tahazzudisChecked,settahazzudisChecked]=useState(false);
+  const[nafalisChecked,setnafalisChecked]=useState(false);
 
-  const[zikirisChecked,setzikirisChecked]=useState();
-  const[duaisChecked,setduaisChecked]=useState();
-  const[istigfarisChecked,setistigfarisChecked]=useState();
-  const[hadisisChecked,sethadisisChecked]=useState();
-  const[danisChecked,setdanisChecked]=useState();
-  const[jamayatisChecked,setjamayatisChecked]=useState();
-  const[khomaisChecked,setkhomaisChecked]=useState();
-  const[notunsekhaisChecked,setnotunsekhaisChecked]=useState();
+  const[zikirisChecked,setzikirisChecked]=useState(false);
+  const[duaisChecked,setduaisChecked]=useState(false);
+  const[istigfarisChecked,setistigfarisChecked]=useState(false);
+  const[hadisisChecked,sethadisisChecked]=useState(false);
+  const[danisChecked,setdanisChecked]=useState(false);
+  const[jamayatisChecked,setjamayatisChecked]=useState(false);
+  const[khomaisChecked,setkhomaisChecked]=useState(false);
+  const[notunsekhaisChecked,setnotunsekhaisChecked]=useState(false);
 
   function handleDay() {
     setDate(date - 1);
@@ -153,6 +153,39 @@ useEffect(() => {
     handleInfo();
     }, [inputs.ID]);
 
+    useEffect(() => {
+      function handleSetInfo(){
+        if(progressArr.length != 0){
+        setfazarFarazisChecked(setBoolean(progressArr[0].FazarFaraz));
+        setfazarSunnatisChecked(setBoolean(progressArr[0].FazarSuunat));
+        setzohorFarazisChecked(setBoolean(progressArr[0].ZohorFaraz));
+        setzohorSunnatisChecked(setBoolean(progressArr[0].ZohorSunnat))
+        setasarFarazisChecked(setBoolean(progressArr[0].AsarFaraz))
+        setasarSunnatisChecked(setBoolean(progressArr[0].AsarSunnat))
+        setmagribFarazisChecked(setBoolean(progressArr[0].MagribFaraz))
+        setmagribSunnatisChecked(setBoolean(progressArr[0].MagribSunnat))
+        seteshaFarazisChecked(setBoolean(progressArr[0].EshaFaraz))
+        seteshaSunnatisChecked(setBoolean(progressArr[0].EshaSunnat))
+        
+        // setquranPage(setBoolean(progressArr[0].QuranPage))
+        // setquranAyat(setBoolean(progressArr[0].QuranAyat))
+  
+        settarabihisChecked(setBoolean(progressArr[0].Tarabih))
+        settahazzudisChecked(setBoolean(progressArr[0].Tahazzud))
+        setnafalisChecked(setBoolean(progressArr[0].Nafal))
+        setzikirisChecked(setBoolean(progressArr[0].Zikir))
+        setduaisChecked(setBoolean(progressArr[0].Dua))
+        setistigfarisChecked(setBoolean(progressArr[0].Istigfar))
+        sethadisisChecked(setBoolean(progressArr[0].Hadis))
+        setdanisChecked(setBoolean(progressArr[0].Dan))
+        setjamayatisChecked(setBoolean(progressArr[0].Jamayat))
+        setkhomaisChecked(setBoolean(progressArr[0].Khoma))
+        setnotunsekhaisChecked(setBoolean(progressArr[0].NotunSekha))
+        }
+      };
+      handleSetInfo();
+    }, [progressArr.length !=0]); 
+
     const personalInfo = {
       UserID,
       Ramadan: inputs.rDay,
@@ -182,45 +215,16 @@ useEffect(() => {
       
     };
 
-    const handleInfo = (event) => {
-      event.preventDefault();
-      const personalInfo = {
-        UserID,
-        Ramadan: inputs.rDay,
-        fazarFarazisChecked,
-        fazarSunnatisChecked,
-        zohorFarazisChecked,
-        zohorSunnatisChecked,
-        asarFarazisChecked,
-        asarSunnatisChecked,
-        magribFarazisChecked,
-        magribSunnatisChecked,
-        eshaFarazisChecked,
-        eshaSunnatisChecked,
-        quranPage,
-        QuranAyat,
-        tarabihisChecked,
-        tahazzudisChecked,
-        nafalisChecked,
-        zikirisChecked,
-        duaisChecked,
-        istigfarisChecked,
-        hadisisChecked,
-        danisChecked,
-        jamayatisChecked,
-        khomaisChecked,
-        notunsekhaisChecked,
-        
-      };
-      console.log("personal info is",personalInfo);
-    };
+    
 
     const handleSubmit = async (e)=>{
-      console.log("Info",personalInfo);
-      handleInfo();
       e.preventDefault();
+      alert(personalInfo);
+      console.log("Info",personalInfo);
+      //handleInfo();
+      
       try{
-        await axios.post("http://localhost:3002/api/setProfileInfo",personalInfo);
+        await axios.post("http://localhost:3002/api/setProgressInfo",personalInfo);
         alert(personalInfo)
         console.log("Insert successfully",personalInfo);
         setErr("Saved")
@@ -316,12 +320,12 @@ useEffect(() => {
             </div>
             <div className="col-6">
                 <center><h4>কুরআন ট্র্যাকার</h4></center> <hr />
-                <div class="mb-3 mt-3">
-                    <label for="q1" className="form-label">আজ যত পৃষ্ঠা কোরআন পরেছিঃ</label><br/>
+                <div className="mb-3 mt-3">
+                    <label htmlFor="q1" className="form-label">আজ যত পৃষ্ঠা কোরআন পরেছিঃ</label><br/>
                     <input type="number"  id="q1" placeholder="পৃষ্ঠা নম্বর" name="quranPage" onChange={(e) => setquranPage(e.target.value)}/>
                 </div>
-                <div class="mb-3 mt-3">
-                    <label for="q2" className="form-label">বিশেষ কোনো আয়াত বা পারাঃ</label><br/>
+                <div className="mb-3 mt-3">
+                    <label htmlFor="q2" className="form-label">বিশেষ কোনো আয়াত বা পারাঃ</label><br/>
                     <textarea row="8" type="text" id="q2" placeholder="এখানে লিখুন" name="quranAyat"  onChange={(e) => setquranAyat(e.target.value)}></textarea>
                 </div>
             </div>
@@ -367,7 +371,8 @@ useEffect(() => {
                 </div>
             </div>
         </div>
-        <input type="submit" value="Save" onClick={handleSubmit} />
+        <button onClick={handleSubmit} >Save</button>
+        {/* <input type="submit" value="Save" onClick={handleSubmit} /> */}
         </form>
       </div>
       
