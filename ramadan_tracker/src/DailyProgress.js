@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./CSS Files/DailyProgress.css";
 import Photo from "./aaa.jpg";
 import Footer from "./Footer";
+import { getCookie } from "./Authorization/Cookie_handle";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function DailyProgress({ getRamadanDay }) {
   const [time, setTime] = useState(new Date());
@@ -9,6 +12,15 @@ export default function DailyProgress({ getRamadanDay }) {
   const [name, setName] = useState("Anomouus");
   const [address, setaddress] = useState("Not Set");
   const [phone, setphone] = useState("Not Set");
+  const [err, setErr] = useState();
+  const [profileArr, setprofileArr] = useState([]);
+  const [progressArr, setprogressArr] = useState([]);
+  const[inputs,setInputs]= useState({
+    ID: "",
+    UserID: "",
+    rDay: "",
+  });
+  var ID,rDay;
 
   const[fazarFarazisChecked,setfazarFarazisChecked]=useState();
   const[fazarSunnatisChecked,setfazarSunnatisChecked]=useState();
@@ -24,6 +36,9 @@ export default function DailyProgress({ getRamadanDay }) {
 
   const[eshaFarazisChecked,seteshaFarazisChecked]=useState();
   const[eshaSunnatisChecked,seteshaSunnatisChecked]=useState();
+
+  const [quranPage,setquranPage] = useState();
+  const [QuranAyat, setquranAyat] = useState('');
 
   const[tarabihisChecked,settarabihisChecked]=useState();
   const[tahazzudisChecked,settahazzudisChecked]=useState();
@@ -50,12 +65,91 @@ export default function DailyProgress({ getRamadanDay }) {
     else return "th";
   }
   
+  function setBoolean(value){
+    if(value == 0)
+      return false;
+    else
+      return true;
+  }
+
+  const handleSubmit = ()=>{
+
+  }
 
   useEffect(() => {
-    setzohorFarazisChecked(true);
-    setasarFarazisChecked(true);
-    // @sakib database theke ramadanDay onuzayi data load kora ok korlam
-  }, []);
+    function handleCookie(){
+        ID = getCookie('my_cookies');
+        inputs.ID = ID;
+        rDay =getRamadanDay(time.getMonth() + 1, date);
+        inputs.rDay = rDay;
+    };
+    handleCookie();
+  }, []); 
+
+
+  const navigate = useNavigate();
+useEffect(() => {
+    const handleInfo = async()=>{
+        console.log(inputs.ID," in cookies")
+        if(inputs.ID){
+            try{
+                ID = await axios.post("http://localhost:3002/api/getProfileInfo",inputs);
+                console.log(ID," is info");
+                setprofileArr(ID.data);
+                console.log(profileArr," is data arr");
+
+                inputs.UserID = profileArr[0].UserID;
+                rDay = await axios.post("http://localhost:3002/api/getProgressInfo",inputs);
+                console.log(rDay," is progress info");
+                setprogressArr(rDay.data);
+                console.log(progressArr," is data arr");
+            }catch(err){
+                setErr("Unable to get Info");
+            }
+        
+        }
+        else{
+            navigate("/login");
+        }
+    }
+
+    if(profileArr.length != 0){
+      setName(profileArr[0].Name);
+      setaddress(profileArr[0].Address);
+      setphone(profileArr[0].Phone);
+    }
+    
+    if(progressArr.length != 0){
+      setfazarFarazisChecked(setBoolean(progressArr[0].FazarFaraz));
+      setfazarSunnatisChecked(setBoolean(progressArr[0].FazarSuunat));
+      setzohorFarazisChecked(setBoolean(progressArr[0].ZohorFaraz));
+      setzohorSunnatisChecked(setBoolean(progressArr[0].ZohorSunnat))
+      setasarFarazisChecked(setBoolean(progressArr[0].AsarFaraz))
+      setasarSunnatisChecked(setBoolean(progressArr[0].AsarSunnat))
+      setmagribFarazisChecked(setBoolean(progressArr[0].MagribFaraz))
+      setmagribSunnatisChecked(setBoolean(progressArr[0].MagribSunnat))
+      seteshaFarazisChecked(setBoolean(progressArr[0].EshaFaraz))
+      seteshaSunnatisChecked(setBoolean(progressArr[0].EshaSunnat))
+      
+      // setquranPage(setBoolean(progressArr[0].QuranPage))
+      // setquranAyat(setBoolean(progressArr[0].QuranAyat))
+
+      settarabihisChecked(setBoolean(progressArr[0].Tarabih))
+      settahazzudisChecked(setBoolean(progressArr[0].Tahazzud))
+      setnafalisChecked(setBoolean(progressArr[0].Nafal))
+      setzikirisChecked(setBoolean(progressArr[0].Zikir))
+      setduaisChecked(setBoolean(progressArr[0].Dua))
+      setistigfarisChecked(setBoolean(progressArr[0].Istigfar))
+      sethadisisChecked(setBoolean(progressArr[0].Hadis))
+      setdanisChecked(setBoolean(progressArr[0].Dan))
+      setjamayatisChecked(setBoolean(progressArr[0].Jamayat))
+      setkhomaisChecked(setBoolean(progressArr[0].Khoma))
+      setnotunsekhaisChecked(setBoolean(progressArr[0].NotuSekha))
+    }
+    
+    
+    handleInfo();
+    }, [inputs.ID]);
 
   return (
     <div className=" full_body">
@@ -85,7 +179,7 @@ export default function DailyProgress({ getRamadanDay }) {
       </div>
 
       <div className="checkpoints p-3">
-        <form action="">
+        <form onSubmit={handleSubmit} method="POST">
         <div className="row">
             <div className="col-6">
                 <center><h4>নামাজ ট্র্যাকার</h4></center> <hr />
@@ -142,11 +236,11 @@ export default function DailyProgress({ getRamadanDay }) {
                 <center><h4>কুরআন ট্র্যাকার</h4></center> <hr />
                 <div class="mb-3 mt-3">
                     <label for="q1" className="form-label">আজ যত পৃষ্ঠা কোরআন পরেছিঃ</label><br/>
-                    <input type="number"  id="q1" placeholder="পৃষ্ঠা নম্বর" name="quranPage"/>
+                    <input type="number"  id="q1" placeholder="পৃষ্ঠা নম্বর" name="quranPage" onChange={(e) => setquranPage(e.target.value)}/>
                 </div>
                 <div class="mb-3 mt-3">
                     <label for="q2" className="form-label">বিশেষ কোনো আয়াত বা পারাঃ</label><br/>
-                    <textarea row="8" type="text" id="q2" placeholder="এখানে লিখুন" name="quranPage"></textarea>
+                    <textarea row="8" type="text" id="q2" placeholder="এখানে লিখুন" name="quranAyat"  onChange={(e) => setquranAyat(e.target.value)}></textarea>
                 </div>
             </div>
         </div>
@@ -191,7 +285,7 @@ export default function DailyProgress({ getRamadanDay }) {
                 </div>
             </div>
         </div>
-        <input type="submit" value="Save" />
+        <input type="submit" value="Save" onClick={handleSubmit} />
         </form>
       </div>
       

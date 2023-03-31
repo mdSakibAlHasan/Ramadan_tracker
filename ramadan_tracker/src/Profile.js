@@ -65,17 +65,15 @@ export default function Profile() {
             }
         }
         
-        // const x1values=["Namaz"];
-        // const x2values=["Quran"];
-        // const x3values=["Other Activities"];
-        // const barColors = ["#b91d47"];
-
-        setname(profileArr[0].Name);
-        setaddress(profileArr[0].Address);
-        setphone(profileArr[0].Phone);
-        setemail(profileArr[0].Email);
-        setgender(profileArr[0].Gender);
-        setaboutme(profileArr[0].AboutMe);
+        if(profileArr.length != 0){
+            setname(profileArr[0].Name);
+            setaddress(profileArr[0].Address);
+            setphone(profileArr[0].Phone);
+            setemail(profileArr[0].Email);
+            setgender(profileArr[0].Gender);
+            setaboutme(profileArr[0].AboutMe);
+        }
+        
         // setnamazPercentage([...namazPercentage, 92]);
         // setquranPercentage([...quranPercentage, 42]);
         // setotherPercentage([...otherPercentage, 22]);

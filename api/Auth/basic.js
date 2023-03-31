@@ -18,7 +18,7 @@ const create_progress = (email)=>{
     }
     else{
       for(let i=1;i<=30;i++){
-        qur = `INSERT INTO ramadan.progress (ID, Ramadan, FazarFaraz, FazarSuunat, ZohorFaraz, ZohorSunnat, AsarFaraz, AsarSunnat, MagribFaraz, MagribSunnat, EshaFaraz, EshaSunnat, Tarabih, Tahazzud, Nafal, Zikir, Dua, Istigfar, Hadis, Dan, Jamayat, Khoma, NotunSekha) VALUES (${result[0].UserID}, ${i}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
+        qur = `INSERT INTO ramadan.progress (ID, Ramadan, FazarFaraz, FazarSuunat, ZohorFaraz, ZohorSunnat, AsarFaraz, AsarSunnat, MagribFaraz, MagribSunnat, EshaFaraz, EshaSunnat, Tarabih, Tahazzud, Nafal, Zikir, Dua, Istigfar, Hadis, Dan, Jamayat, Khoma, NotunSekha) VALUES (${result[0].UserID}, ${i}, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,  FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);`;
         db.query(qur);
       }
       
