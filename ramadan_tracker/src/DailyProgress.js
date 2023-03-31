@@ -20,7 +20,7 @@ export default function DailyProgress({ getRamadanDay }) {
     UserID: "",
     rDay: "",
   });
-  var ID,rDay;
+  var ID,rDay,UserID;
 
   const[fazarFarazisChecked,setfazarFarazisChecked]=useState();
   const[fazarSunnatisChecked,setfazarSunnatisChecked]=useState();
@@ -72,9 +72,8 @@ export default function DailyProgress({ getRamadanDay }) {
       return true;
   }
 
-  const handleSubmit = ()=>{
-
-  }
+  
+  
 
   useEffect(() => {
     function handleCookie(){
@@ -113,10 +112,13 @@ useEffect(() => {
         }
     }
 
+
+
     if(profileArr.length != 0){
       setName(profileArr[0].Name);
       setaddress(profileArr[0].Address);
       setphone(profileArr[0].Phone);
+      UserID = profileArr[0].UserID;
     }
     
     if(progressArr.length != 0){
@@ -144,12 +146,92 @@ useEffect(() => {
       setdanisChecked(setBoolean(progressArr[0].Dan))
       setjamayatisChecked(setBoolean(progressArr[0].Jamayat))
       setkhomaisChecked(setBoolean(progressArr[0].Khoma))
-      setnotunsekhaisChecked(setBoolean(progressArr[0].NotuSekha))
+      setnotunsekhaisChecked(setBoolean(progressArr[0].NotunSekha))
     }
     
     
     handleInfo();
     }, [inputs.ID]);
+
+    const personalInfo = {
+      UserID,
+      Ramadan: inputs.rDay,
+      fazarFarazisChecked,
+      fazarSunnatisChecked,
+      zohorFarazisChecked,
+      zohorSunnatisChecked,
+      asarFarazisChecked,
+      asarSunnatisChecked,
+      magribFarazisChecked,
+      magribSunnatisChecked,
+      eshaFarazisChecked,
+      eshaSunnatisChecked,
+      quranPage,
+      QuranAyat,
+      tarabihisChecked,
+      tahazzudisChecked,
+      nafalisChecked,
+      zikirisChecked,
+      duaisChecked,
+      istigfarisChecked,
+      hadisisChecked,
+      danisChecked,
+      jamayatisChecked,
+      khomaisChecked,
+      notunsekhaisChecked,
+      
+    };
+
+    const handleInfo = (event) => {
+      event.preventDefault();
+      const personalInfo = {
+        UserID,
+        Ramadan: inputs.rDay,
+        fazarFarazisChecked,
+        fazarSunnatisChecked,
+        zohorFarazisChecked,
+        zohorSunnatisChecked,
+        asarFarazisChecked,
+        asarSunnatisChecked,
+        magribFarazisChecked,
+        magribSunnatisChecked,
+        eshaFarazisChecked,
+        eshaSunnatisChecked,
+        quranPage,
+        QuranAyat,
+        tarabihisChecked,
+        tahazzudisChecked,
+        nafalisChecked,
+        zikirisChecked,
+        duaisChecked,
+        istigfarisChecked,
+        hadisisChecked,
+        danisChecked,
+        jamayatisChecked,
+        khomaisChecked,
+        notunsekhaisChecked,
+        
+      };
+      console.log("personal info is",personalInfo);
+    };
+
+    const handleSubmit = async (e)=>{
+      console.log("Info",personalInfo);
+      handleInfo();
+      e.preventDefault();
+      try{
+        await axios.post("http://localhost:3002/api/setProfileInfo",personalInfo);
+        alert(personalInfo)
+        console.log("Insert successfully",personalInfo);
+        setErr("Saved")
+      }catch(err){
+
+        //setErr("Not insert data ")
+        alert(err)
+      }
+
+    }
+  
 
   return (
     <div className=" full_body">
@@ -179,7 +261,7 @@ useEffect(() => {
       </div>
 
       <div className="checkpoints p-3">
-        <form onSubmit={handleSubmit} method="POST">
+        <form >
         <div className="row">
             <div className="col-6">
                 <center><h4>নামাজ ট্র্যাকার</h4></center> <hr />
