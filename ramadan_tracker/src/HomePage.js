@@ -16,6 +16,7 @@ export default function HomePage() {
     if(time.getHours()>12)  {setAMPM("pm");}
     else {setAMPM("am");}
     setTime(new Date());
+    
   }, 1000);},[]);
 
   const handleImageChange = () => {

@@ -12,7 +12,7 @@ export default function FeedPage() {
     ]
   return (
     <div className='shade1 p-3 full_page_height' style={{ display: "inline-block" }}>
-        {data.map((feed)=><FeedCard name={feed.name} time={feed.time} story={feed.story}/>)}
+        {data.map((feed)=><FeedCard key ={feed.id} name={feed.name} time={feed.time} story={feed.story}/>)}
     </div>
   )
 }

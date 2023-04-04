@@ -104,6 +104,9 @@ export default function Profile( ) {
         setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
         setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
         }
+        else{
+            console.log("here RE NOT")
+        }
         console.log(namazPercentage);
         // setnamazPercentage(addElement(namazPercentage,92));
         // setquranPercentage(addElement(quranPercentage,43));
