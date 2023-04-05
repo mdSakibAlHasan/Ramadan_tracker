@@ -99,15 +99,15 @@ export default function Profile( ) {
         
         //getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])
         //setnamazPercentage([...namazPercentage, getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])]);
-        if(chartArr.length!=0){
-        setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
-        setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
-        setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
-        }
-        else{
-            console.log("here RE NOT")
-        }
-        console.log(namazPercentage);
+        // if(chartArr.length!=0){
+        // setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
+        // setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
+        // setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
+        // }
+        // else{
+        //     console.log("here RE NOT")
+        // }
+        // console.log(namazPercentage);
         // setnamazPercentage(addElement(namazPercentage,92));
         // setquranPercentage(addElement(quranPercentage,43));
         // setotherPercentage(addElement(otherPercentage,67));
@@ -123,6 +123,18 @@ export default function Profile( ) {
         //   });
         handleInfo();
         }, [inputs.ID]);
+
+
+        
+      useEffect(() => {
+        function handleChartInfo(){
+            setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
+            setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
+            setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
+        
+        };
+        handleChartInfo();
+      }, [chartArr.length!=0]);
 
   return (
     <>

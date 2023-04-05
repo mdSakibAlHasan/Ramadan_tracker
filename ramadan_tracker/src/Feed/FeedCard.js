@@ -12,33 +12,50 @@ export default function FeedCard(props) {
   const [likeCount, setLikeCount] = useState(0);
   const [likeHistory,setLikeHistory] = useState([]);
   const [err, setErr] = useState();
-  const[inputs,setInputs]= useState({
+  const [inputs,setInputs]= useState({
     FeedID: "",
     ID: "",
     likeCount:"",
     reported:"",
     liked:"",
+    UserID:"",
   });
-  var ID;
+
+
+
 
   const sendDatabase = async ()=>{
+    // const postInfo={
+    //   UserID:inputs.UserID,
+    //   FeedID:inputs.FeedID, 
+    //   likeCount:likeCount+1, 
+    //   liked};
     await axios.post("http://localhost:3002/api/setlike",inputs);
   }
 
+  const sendReportDatabase = async ()=>{
+    await axios.post("http://localhost:3002/api/setReport",inputs);
+  }
+
   const handleLikeClick = () => {
-    if(liked)
+    if(liked){
+      inputs.likeCount = (likeCount-1);
       setLikeCount(likeCount-1);
+    }
     else{
+      inputs.likeCount = (likeCount+1);
       setLikeCount(likeCount+1);
     }
     setLiked(!liked);
-    inputs.likeCount = likeCount;
+    console.log(inputs.likeCount," is a likecount")
+    //inputs.likeCount = likeCount;
     inputs.liked = liked;
     sendDatabase();
   }
 
   const handleReportClick = () =>{
     setReported(!reported);
+    sendReportDatabase();
   }
 
   useEffect(() => {
@@ -67,7 +84,7 @@ export default function FeedCard(props) {
         }
         if(result.data[1]==1)
           setReported(!reported);
-        // console.log(info);
+        inputs.UserID = result.data[2];
       }catch(err){
         setErr("Not get data ")
       }

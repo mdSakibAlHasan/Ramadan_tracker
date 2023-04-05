@@ -47,7 +47,7 @@ export const getPostInfo = (req, res) => {
       //console.log(FeedID," ---- ",ID)
       // const UserID = getID(ID);
       // console.log(FeedID," ---- ",UserID)
-      var myArr = [0,0]
+      var myArr = [0,0,0]
 
       Jwt.verify(ID, "jwtkey", (err, userInfo) => {
         if (err){ 
@@ -77,8 +77,8 @@ export const getPostInfo = (req, res) => {
                   }
                 });
 
-                qur = `SELECT COUNT(*) FROM ramadan.feed where Report1=${UserID} or Report2=${UserID} or Report3=${UserID};`;
-                console.log(qur);
+                qur = `SELECT COUNT(*) FROM ramadan.feed where (Report1=${UserID} or Report2=${UserID} or Report3=${UserID}) and FeedID = ${FeedID};`;
+                //console.log(qur);
                 db.query(qur,function(err,result){
                   if(err){
                     console.log("Something happend for get secode data");
@@ -87,6 +87,7 @@ export const getPostInfo = (req, res) => {
                     //console.log(result[0]['COUNT(*)'], " second")
                     //return res.status(200).send(result);
                     myArr[1] = result[0]['COUNT(*)'];
+                    myArr[2] = UserID;
                     console.log(myArr,FeedID)
                     return res.status(200).send(myArr);
                   }
@@ -103,19 +104,61 @@ export const getPostInfo = (req, res) => {
 
 
 export const storeLikes = (req, res) => {
-  const{ID,FeedID, likeCount, liked} = req.body;
+  const{UserID,FeedID, likeCount, liked} = req.body;
   console.log(FeedID," ",likeCount," ",liked);
   var qur = `update ramadan.feed set LikeCount = ${likeCount} where FeedID = ${FeedID};`;
+  //console.log(qur);
   db.query(qur,function(err,result){
     if(err){
       console.log("Something happend for get feed data");
     }
     else{
-      if(liked){
-        qur = `insert into ramadan.likes values(${FeedID},${ID});`
+      if(!liked){
+        qur = `insert into ramadan.likes values(${FeedID},${UserID});`
       }
       else{
-        qur = `delete from ramadan.likes where PostID=${FeedID} and LikeID=${ID};`
+        qur = `delete from ramadan.likes where PostID=${FeedID} and LikeID=${UserID};`
+      }
+      //console.log(qur)
+      db.query(qur,function(err,result){
+        if(err){
+          console.log("Something happend for get like data");
+        }
+        else{
+          console.log("complete")
+        }
+      });
+     }
+  });
+}
+
+
+export const storeReport = (req, res) => {
+  const{UserID,FeedID, reported} = req.body;
+  console.log(FeedID," ",reported," ",UserID);
+  var qur = `select Report1, Report2, Report3 from ramadan.feed where FeedID = ${FeedID};`;
+  console.log(qur);
+  db.query(qur,function(err,result){
+    if(err){
+      console.log("Something happend for get feed data");
+    }
+    else{
+      console.log(result);
+      if(!reported){
+        if(result[0].Report1 == 0)
+          qur = `UPDATE ramadan.feed SET Report1 = ${UserID} where FeedID=${FeedID};`;
+        else if(result[0].Report2 == 0)
+          qur = `UPDATE ramadan.feed SET Report2 = ${UserID} where FeedID=${FeedID};`;
+        else
+          qur = `delete from ramadan.feed where FeedID=${FeedID};`
+      }
+      else{
+        if(result[0].Report1 == UserID)
+          qur = `UPDATE ramadan.feed SET Report1 = 0 where FeedID=${FeedID};`;
+        else if(result[0].Report2 == UserID)
+          qur = `UPDATE ramadan.feed SET Report2 = 0 where FeedID=${FeedID};`;
+        else
+          qur = `UPDATE ramadan.feed SET Report3 = 0 where FeedID=${FeedID};`;
       }
       console.log(qur)
       db.query(qur,function(err,result){
@@ -123,7 +166,7 @@ export const storeLikes = (req, res) => {
           console.log("Something happend for get like data");
         }
         else{
-          console.log("complete")
+          console.log("complete to store report")
         }
       });
      }
