@@ -76,20 +76,29 @@ export default function Profile( ) {
                 setaboutme(profileArr[0].AboutMe);
             }
 
-            if(chartArr.length!=0){
+            //if(chartArr.length!=0){
                 setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
                 setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
                 setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
-            }
+           // }
       }
     
     
       const navigate = useNavigate();
     useEffect(() => {
+        
+            // fetch('http://localhost:3002/api/getProfileInfo')
+            //   .then(response => response.json())
+            //   .then(data => {
+            //     setprofileArr(data.data);
+            //     setAllInfo();
+            //   });
+          
         const handleInfo = async()=>{
             console.log(inputs.ID," in cookies")
             if(inputs.ID){
                 try{
+
                     ID = await axios.post("http://localhost:3002/api/getProfileInfo",inputs);
                     console.log(ID," is info");
                     setprofileArr(ID.data);
@@ -119,11 +128,16 @@ export default function Profile( ) {
 
         
       useEffect(() => {
-        function handleChartInfo(){
-           setAllInfo();
-        };
-        handleChartInfo();
-      }, [chartArr.length!=0 ]);
+        const timer = setTimeout(() => {
+            // execute the function after 2 seconds
+            setAllInfo();
+
+            console.log('Function executed after 2 seconds');
+          }, 2000);
+      
+          // clear the timer on unmount
+          return () => clearTimeout(timer);
+      }, [ ]);
 
     //   const myfeeds=[
     //     {time:"Today", story:"A Prophet once passed by an ant hill and saw ants working tirelessly to store food for the winter. He was so impressed that he said, :Go to the ant, you sluggard, and consider her ways and be wise (Quran 6: 118). The lesson here is that we should learn from the hardworking ants and not be lazy."},
@@ -245,6 +259,7 @@ export default function Profile( ) {
             </div><br/>
             <form onSubmit={feedsubmit}><br/>
             <a href="/changepass">পাসওয়ার্ড পরিবর্তন করুন</a><br/>
+            <input className='shade1 p-2' type="button" onClick={setAllInfo} value="refresh" /><br/>
                 <center><h4>ফিড</h4></center><hr/> <br/>
                 <p>নতুন ফিড পোস্ট করুন</p>
                 <div className="shade3">

@@ -20,7 +20,7 @@ export const getProfileInfo = (req, res) => {
               return res.status(409).json("not authorize to get data");
             }
             else{ 
-              console.log("sucess to get profile info",data);
+              console.log("sucess to get profile info");
               return res.status(200).send(data);
             }  
           });
@@ -65,7 +65,7 @@ export const getChartInfo = (req, res) => {
           
         }
       
-        console.log(arr," is the value")
+        console.log("Successfdully get chart info")
         return res.status(200).send(arr);
       }  
     });

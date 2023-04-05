@@ -185,6 +185,7 @@ export const getOwnPost = (req, res) => {
       console.log("Something happend for get Own post data");
     }
     else{
+      console.log("Successfully get own feed")
       return res.status(200).send(result);
     }
   });
