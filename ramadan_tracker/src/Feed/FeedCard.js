@@ -10,19 +10,31 @@ export default function FeedCard(props) {
   const [liked, setLiked] = useState(false);
   const [reported, setReported] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [likeHistory,setLikeHistory] = useState([]);
   const [err, setErr] = useState();
   const[inputs,setInputs]= useState({
     FeedID: "",
     ID: "",
+    likeCount:"",
+    reported:"",
+    liked:"",
   });
   var ID;
 
+  const sendDatabase = async ()=>{
+    await axios.post("http://localhost:3002/api/setlike",inputs);
+  }
+
   const handleLikeClick = () => {
-    setLiked(!liked);
     if(liked)
       setLikeCount(likeCount-1);
-    else
+    else{
       setLikeCount(likeCount+1);
+    }
+    setLiked(!liked);
+    inputs.likeCount = likeCount;
+    inputs.liked = liked;
+    sendDatabase();
   }
 
   const handleReportClick = () =>{
@@ -31,27 +43,38 @@ export default function FeedCard(props) {
 
   useEffect(() => {
     function handleCookie(){
-      inputs.ID = getCookie('my_cookies');
       inputs.FeedID = props.FeedID;
+      inputs.ID = getCookie('my_cookies');
+      setInputs(prevInputs => ({
+        ...prevInputs,
+        ID: getCookie('my_cookies'),
+        FeedID: props.FeedID
+      }));
       setLikeCount(props.LikeCount);
-    };
+    }
     handleCookie();
-  }, []); 
+  }, []);
+  
 
 
   useEffect(() => {
     async function handleInfo(){
       try{
         const result =  await axios.post("http://localhost:3002/api/getPostInfo",inputs);
-        // setInfo(result.data);
-        console.log(result.data);
+        setLikeHistory(result.data,"  ",props.FeedID)
+        if(result.data[0]==1){
+          setLiked(!liked);
+        }
+        if(result.data[1]==1)
+          setReported(!reported);
         // console.log(info);
       }catch(err){
         setErr("Not get data ")
       }
-  };
-  handleInfo();
+    };
+    handleInfo();
   }, [inputs.ID]); 
+   
 
   return (
     <>
@@ -60,7 +83,7 @@ export default function FeedCard(props) {
             <div className="display-6">{props.name}</div>
             <div ><strong>{props.time}</strong></div> <hr/>
             <div >{props.story}</div> <hr/>
-            <div><strong>{props.LikeCount} Likes</strong></div>
+            <div><strong>{likeCount} Likes</strong></div>
             <div className="col mt-2"><button className={liked ? 'shade3 m-1 liked' : 'shade3 m-1'} onClick={handleLikeClick}>
             {liked ? 'Liked' : 'Like'}</button></div>
             <div className="col mt-2"><button className={reported ? 'shade3 m-1 liked' : 'shade3 m-1'} onClick={handleReportClick}>
