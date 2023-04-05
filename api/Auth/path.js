@@ -2,7 +2,8 @@ import express from "express";
 import { signup, login } from "./basic.js";
 import { getProfileInfo, getChartInfo } from "./profile.js";
 import { getProgressInfo, setProgressInfo } from "./progress.js";
-import { getFeed,getPostInfo, storeLikes ,storeReport} from "./post.js";
+import { getFeed,getPostInfo, storeLikes ,storeReport,getOwnPost,setPost} from "./post.js";
+import { getID,checkOldPassword } from "./password.js";
 
 const router = express.Router();
 
@@ -16,5 +17,9 @@ router.post("/feed",getFeed);
 router.post("/getPostInfo",getPostInfo);
 router.post("/setLike",storeLikes);
 router.post("/setReport",storeReport);
+router.post("/getOwmPost",getOwnPost);
+router.post("/setPost",setPost);
+router.post("/getID",getID);
+router.post("/checkOldPass",checkOldPassword);
 
 export default router;

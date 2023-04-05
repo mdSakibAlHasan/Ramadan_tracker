@@ -3,7 +3,7 @@ import  Jwt  from "jsonwebtoken";
 
 export const getFeed = (req, res) => {
       
-    var qur = `select FeedID,Date,LikeCount,post,Name from ramadan.feed,ramadan.users where OwnerID=UserID;`;
+    var qur = `select FeedID,Date,LikeCount,post,Name from ramadan.feed,ramadan.users where OwnerID=UserID ORDER BY Date DESC;`;
     db.query(qur,function(err,result){
       if(err){
         console.log("Something happend for get feed data");
@@ -172,3 +172,37 @@ export const storeReport = (req, res) => {
      }
   });
 }
+
+
+
+export const getOwnPost = (req, res) => {
+  const { UserID } = req.body;
+  console.log(UserID);
+  var qur = `select FeedID, Date, LikeCount, post from ramadan.feed where OwnerID = ${UserID} ORDER BY Date DESC;`;
+  console.log(qur);
+  db.query(qur,function(err,result){
+    if(err){
+      console.log("Something happend for get Own post data");
+    }
+    else{
+      return res.status(200).send(result);
+    }
+  });
+}
+
+export const setPost = (req, res) => {
+  const { post,feedDate,ID} = req.body;
+  console.log(post,feedDate,ID);
+  var qur = `insert into ramadan.feed(OwnerID,Date,post) values(${ID},'${feedDate}','${post}');`;
+  console.log(qur);
+  db.query(qur,function(err,result){
+    if(err){
+      console.log("Something happend for post own data");
+    }
+    else{
+      console.log("Complete")
+      return res.status(200).json("Complete post upload");
+    }
+  });
+}
+

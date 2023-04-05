@@ -3,6 +3,7 @@ import '../CSS Files/Colors.css';
 import FeedCard from './FeedCard';
 import { useState } from 'react';
 import axios from 'axios';
+import Autosuggest from 'react-autosuggest';
 import { getCookie } from '../Authorization/Cookie_handle';
 
 export default function FeedPage() {
@@ -30,10 +31,58 @@ export default function FeedPage() {
       };
       handleInfo();
     }, []); 
+
+    //for sugession
+    const getSuggestions = value => {
+      const inputValue = value.trim().toLowerCase();
+      const inputLength = inputValue.length;
+    
+      return inputLength === 0 ? [] : info.filter(option =>
+        typeof option.Name === 'string' && option.Name.toLowerCase().slice(0, inputLength) === inputValue
+      );
+    };
+
+
+    const [value, setValue] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    setSuggestions(getSuggestions(value));
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
+  const onChange = (event, { newValue }) => {
+    setValue(newValue);
+  };
+
+  const inputProps = {
+    placeholder: 'Type a fruit name',
+    value,
+    onChange,
+  };
   
   return (
+    
+
     <div className='shade1 p-3 full_page_height' style={{ display: "inline-block" }}>
+      <div>
+      <Autosuggest
+      suggestions={suggestions}
+      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+      onSuggestionsClearRequested={onSuggestionsClearRequested}
+      getSuggestionValue={suggestion => suggestion}
+      renderSuggestion={suggestion => <div>{suggestion.Name}</div>}
+      inputProps={inputProps}
+    />
+    </div>
+
         {info.map((feed)=><FeedCard key ={feed.FeedID} name={feed.Name} time={feed.Date} story={feed.post} FeedID={feed.FeedID} LikeCount={feed.LikeCount}/>)}
     </div>
+
+
+    
   )
 }

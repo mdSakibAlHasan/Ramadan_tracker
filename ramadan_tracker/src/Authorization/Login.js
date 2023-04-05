@@ -52,7 +52,9 @@ export default function Login() {
                     <input className='shade1 p-2' type="submit" value="লগ-ইন করুন" onClick={submitForm}/>
                 </center>
             </form> <br/>
-            <a href="/signUp">অ্যাকাউন্ট না থাকলে, অ্যাকাউন্ট তৈরি করুন</a>
+            <a href="/signUp">অ্যাকাউন্ট না থাকলে, অ্যাকাউন্ট তৈরি করুন</a><br/>
+            <a href="/changepass">পাসওয়ার্ড পরিবর্তন করুন</a><br/>
+            <a href="/forgotpass">পাসওয়ার্ড ভুলে গেছেন? পাসওয়ার্ড পুনরুদ্ধার করুন</a>
         </div>
 
     </div>

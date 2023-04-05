@@ -11,6 +11,8 @@ import FeedPage from './Feed/FeedPage';
 import FeedCard from './Feed/FeedCard';
 import Navber from './Navber';
 import RamadanInfo from './RamadanInfo';
+import ChangePassword from './Authorization/ChangePassword'
+import ForgotPassword from './Authorization/ForgotPassword'
 
 function App() {
   function getRamadanDay(month,day){
@@ -34,6 +36,8 @@ function App() {
         <Route path="/profile" element={<Profile />}/>
         <Route path="/ramadanInfo" element={<RamadanInfo/>}/>
         <Route path="/feeds" element={<FeedPage/>}/>
+        <Route path="/changepass" element={<ChangePassword/>}/>
+        <Route path="/forgotpass" element={<ForgotPassword/>}/>
         <Route path="/progress" element={<DailyProgress getRamadanDay={getRamadanDay}/>}/>
         {/* <Route path="/feeds" element={<FeedPage/>}/> */}
       </Routes>

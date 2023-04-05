@@ -5,10 +5,13 @@ import Footer from './Footer';
 import { getCookie,getAsynCookie } from './Authorization/Cookie_handle';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import ProfileFeeds from './ProfileFeeds';
 
 export default function Profile( ) {
+   // const [time,setTime] = useState(new Date());
     const [name,setname]=useState();
     const [address,setaddress]=useState();
+    const [newfeed,setnewfed]=useState();
     const [phone,setphone]=useState();
     const [email,setemail]=useState();
     const [gender,setgender]=useState();
@@ -21,11 +24,12 @@ export default function Profile( ) {
     const [quranPercentage,setquranPercentage]=useState([{name:'Namaz',value:70},{name:'Namaz',value:30}]);
     const [otherPercentage,setotherPercentage]=useState([{name:'Namaz',value:86},{name:'Namaz',value:14}]);
     const [profileArr, setprofileArr]=useState([]);
+    const [ownFeeds, setOwnFeeds] = useState([])
 
     const [chart1Data, setChart1Data] = useState({});
     const [chart2Data, setChart2Data] = useState({});
     const [chart3Data, setChart3Data] = useState({});
-
+    
     const data = [
         { name: 'Group A', value: 400 },
         { name: 'Group B', value: 300 },
@@ -78,6 +82,9 @@ export default function Profile( ) {
                      //console.log(ID," is info from namaz");
                      setChartArr(ID.data);
                     console.log(" complete", chartArr);
+
+                    ID = await axios.post("http://localhost:3002/api/getOwmPost",inputs);
+                    setOwnFeeds(ID.data)
                 }catch(err){
                     setErr("Unable to get Info");
                 }
@@ -87,6 +94,7 @@ export default function Profile( ) {
                 navigate("/login");
             }
         }
+       
         
         if(profileArr.length != 0){
             setname(profileArr[0].Name);
@@ -110,7 +118,7 @@ export default function Profile( ) {
         console.log(namazPercentage);
        
         handleInfo();
-        }, [inputs.ID]);
+        }, []);     //inputs.ID
 
 
         
@@ -119,10 +127,31 @@ export default function Profile( ) {
             setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
             setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
             setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
-        
+            
         };
         handleChartInfo();
-      }, [chartArr.length!=0]);
+      }, [chartArr.length!=0 ]);
+
+    //   const myfeeds=[
+    //     {time:"Today", story:"A Prophet once passed by an ant hill and saw ants working tirelessly to store food for the winter. He was so impressed that he said, :Go to the ant, you sluggard, and consider her ways and be wise (Quran 6: 118). The lesson here is that we should learn from the hardworking ants and not be lazy."},
+    //     {time:"Today", story:"The Prophet Muhammad (peace be upon him) used to smile often, and one day a man asked him why he smiled so much. The Prophet replied, \"I smile because it is a charity and a way to bring joy to others.\" This story teaches us the importance of being kind and bringing joy to others."},
+    //     {time:"Today", story:"On the Day of Judgment, our good deeds and bad deeds will be weighed on a scale. One of the companions of the Prophet asked, \"O Messenger of Allah, what if our good deeds are outweighed by our bad deeds?\" The Prophet replied, \"Then Allah will forgive you out of His mercy.\" This story teaches us about the importance of doing good deeds and seeking forgiveness."},
+    //     {time:"Tomorrow", story:"One day, a dog was wandering around in the desert, searching for food. It was so hungry that it started to chew on a dry bone. As it chewed, it discovered that there was still some meat left on the bone. The dog had been patient and had been rewarded for its patience. This story teaches us about the importance of patience and perseverance."},
+    //     {time:"Tomorrow", story:"When the Prophet Muhammad (peace be upon him) was hiding in a cave from his enemies, a spider spun a web over the entrance to the cave. When the enemies came to the cave, they saw the spider web and assumed that nobody could have entered the cave recently. This story teaches us about the importance of using whatever resources we have to protect ourselves and our loved ones."}
+    // ]
+    
+    const feedsubmit=async(event)=>{
+        event.preventDefault(); 
+        let feedDate= time.getFullYear()+"-"+time.getMonth()+"-"+time.getDate();
+        console.log(feedDate)
+        const postInfo={
+            post:newfeed,
+            feedDate,
+            ID:inputs.UserID,
+        }
+        await axios.post("http://localhost:3002/api/setPost",postInfo);
+        navigate("/feeds")
+    };
 
   return (
     <>
@@ -220,6 +249,19 @@ export default function Profile( ) {
                     </PieChart>
                     </div>
                 </div>
+            </div><br/>
+            <form onSubmit={feedsubmit}>
+                <center><h4>ফিড</h4></center><hr/> <br/>
+                <p>নতুন ফিড পোস্ট করুন</p>
+                <div className="shade3">
+                    <label htmlFor="feedd"></label>
+                    <textarea name="feed" id="feeedd" placeholder='এখানে নতুন ফিড লিখুন' style={{ width: "100%" }} rows="5" value={newfeed} onChange={(e)=> setnewfed(e.target.value)}></textarea>
+                </div>
+                <input className='shade1 p-2' type="submit" value="পোস্ট করুন" />
+            </form>
+            <p className='my-3'>আপনার পূর্বের ফিডসমুহ</p>
+            <div className='shade1 p-3 full_page_height' style={{ display: "inline-block" }}>
+                 {ownFeeds.map((feed)=><ProfileFeeds time={feed.Date} story={feed.post} like={feed.LikeCount}/>)}
             </div>
         </div>
         
