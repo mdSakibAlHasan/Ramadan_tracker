@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { getCookie } from './Cookie_handle';
+import { useNavigate } from 'react-router-dom';
 
 export default function ChangePassword() {
     const [newPassCanEdit,setnewPassCanEdit]=useState(true);
@@ -9,11 +10,11 @@ export default function ChangePassword() {
     const [oldPass,setoldPass]=useState();
     const [newPass,setnewPass]=useState();
     const [finalPass,setfinalPass]=useState();
+    const [err, setErr] = useState(null);
 
     const[inputs,setInputs]= useState({
         oldPassword: "",
         newPass: "",
-        UserID:"",
         token:"",
     });
    
@@ -26,27 +27,45 @@ export default function ChangePassword() {
         handleCookie();
       }, []); 
 
-    useEffect(() => {
-        async function handleInfo(){
-            try{
-              const result =  await axios.post("http://localhost:3002/api/getID",inputs);
-              inputs.UserID = (result[0].data);
-              console.log(inputs);
-            }catch(err){
-            }
-        };
-        handleInfo();
-      }, [inputs.token != null]); 
+    // useEffect(() => {
+    //     async function handleInfo(){
+    //         try{
+    //           const result =  await axios.post("http://localhost:3002/api/getID",inputs);
+    //           inputs.UserID = (result[0].data);
+    //           console.log(inputs);
+    //         }catch(err){
+    //         }
+    //     };
+    //     handleInfo();
+    //   }, [inputs.token != null]); 
 
     const checkOldPassword = async (event) => {
         const value = event.target.value;
         inputs.oldPassword = value;
-        await axios.post("http://localhost:3002/api/checkOldPass",inputs);
-        setoldPass(value);
-        if (value === "123") {
-          setnewPassCanEdit(false);
+        try{
+            await axios.post("http://localhost:3002/api/checkOldPass",inputs);
+            //setoldPass(value);
+            setnewPassCanEdit(false);
+        }catch(err){
+            setErr(err);
         }
       };
+
+    const navigate = useNavigate();
+    const submitButton = async(event)=>{
+        if(newPass == finalPass){
+            inputs.newPass = newPass;
+            try{
+                await axios.post("http://localhost:3002/api/checkOldPass",inputs);
+                navigate("/profile")
+            }catch(err){
+                setErr(err);
+            }
+        }
+        else{
+            setErr("Password not match")
+        }
+    }
       
 
   return (
@@ -66,8 +85,10 @@ export default function ChangePassword() {
                 <label for="q3" className="form-label">পাসওয়ার্ড টি নিশ্চিত করতে পুনরায় টাইপ করুন</label><br/>
                 <input disabled={newPassCanEdit} type="password"  id="q3" placeholder="নতুন পাসওয়ার্ড" name="finalpassword" value={finalPass} onChange={(e) => setfinalPass(e.target.value)}/>
             </div> <hr/> <br/>
+            
             <center>
-               <a> <input className='shade1 p-2' type="submit" value="সেভ করুন" /></a>
+                {/* {err && <p>{err}</p>} */}
+               <a> <input className='shade1 p-2' type="button" onClick={submitButton} value="সেভ করুন" /></a>
             </center>
         </form> <br/>
        

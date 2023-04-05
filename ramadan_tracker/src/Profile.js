@@ -64,6 +64,24 @@ export default function Profile( ) {
         p = (value/t);
         return p;
       }
+
+
+      const setAllInfo = ()=>{
+            if(profileArr.length != 0){
+                setname(profileArr[0].Name);
+                setaddress(profileArr[0].Address);
+                setphone(profileArr[0].Phone);
+                setemail(profileArr[0].Email);
+                setgender(profileArr[0].Gender);
+                setaboutme(profileArr[0].AboutMe);
+            }
+
+            if(chartArr.length!=0){
+                setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
+                setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
+                setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
+            }
+      }
     
     
       const navigate = useNavigate();
@@ -79,55 +97,30 @@ export default function Profile( ) {
                     inputs.UserID = profileArr[0].UserID;
 
                     ID = await axios.post("http://localhost:3002/api/getChartInfo",inputs);
-                     //console.log(ID," is info from namaz");
                      setChartArr(ID.data);
                     console.log(" complete", chartArr);
 
                     ID = await axios.post("http://localhost:3002/api/getOwmPost",inputs);
                     setOwnFeeds(ID.data)
+                    setAllInfo();
                 }catch(err){
                     setErr("Unable to get Info");
                 }
-            
             }
             else{
                 navigate("/login");
             }
         }
        
-        
-        if(profileArr.length != 0){
-            setname(profileArr[0].Name);
-            setaddress(profileArr[0].Address);
-            setphone(profileArr[0].Phone);
-            setemail(profileArr[0].Email);
-            setgender(profileArr[0].Gender);
-            setaboutme(profileArr[0].AboutMe);
-        }
-        
-        //getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])
-        //setnamazPercentage([...namazPercentage, getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])]);
-        if(chartArr.length!=0){
-        setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
-        setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
-        setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
-        }
-        else{
-            console.log("here RE NOT")
-        }
-        console.log(namazPercentage);
-       
         handleInfo();
+        setAllInfo();
         }, []);     //inputs.ID
 
 
         
       useEffect(() => {
         function handleChartInfo(){
-            setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
-            setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
-            setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
-            
+           setAllInfo();
         };
         handleChartInfo();
       }, [chartArr.length!=0 ]);
@@ -250,7 +243,8 @@ export default function Profile( ) {
                     </div>
                 </div>
             </div><br/>
-            <form onSubmit={feedsubmit}>
+            <form onSubmit={feedsubmit}><br/>
+            <a href="/changepass">পাসওয়ার্ড পরিবর্তন করুন</a><br/>
                 <center><h4>ফিড</h4></center><hr/> <br/>
                 <p>নতুন ফিড পোস্ট করুন</p>
                 <div className="shade3">

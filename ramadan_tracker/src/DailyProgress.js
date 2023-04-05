@@ -119,8 +119,8 @@ export default function DailyProgress({ getRamadanDay }) {
       seteshaFarazisChecked(setBoolean(progressArr[0].EshaFaraz))
       seteshaSunnatisChecked(setBoolean(progressArr[0].EshaSunnat))
       
-      // setquranPage(setBoolean(progressArr[0].QuranPage))
-      // setquranAyat(setBoolean(progressArr[0].QuranAyat))
+      setquranPage(progressArr[0].QuranPage)
+      setquranAyat(progressArr[0].QuranAyat)
 
       settarabihisChecked(setBoolean(progressArr[0].Tarabih))
       settahazzudisChecked(setBoolean(progressArr[0].Tahazzud))
@@ -199,13 +199,13 @@ export default function DailyProgress({ getRamadanDay }) {
     const handleSubmit = async (e)=>{
       e.preventDefault();
       console.log(ID," ID")
-      alert(personalInfo);
+      //alert(personalInfo);
       console.log("Info",personalInfo);
       //handleInfo();
       
       try{
         await axios.post("http://localhost:3002/api/setProgressInfo",personalInfo);
-        alert(personalInfo)
+        //alert(personalInfo)
         console.log("Insert successfully",personalInfo);
         setErr("Saved")
       }catch(err){
