@@ -61,7 +61,7 @@ export const getChartInfo = (req, res) => {
           if(data[i].QuranAyat != null)
             arr[1] += 1;
 
-          arr[3] += (data[i].Hadis+data[i].Dan+data[i].Nafal+data[i].Zikir+data[i].Dua+data[i].Jamayat+data[i].Khoma+data[i].NotunSekha);
+          arr[2] += (data[i].Hadis+data[i].Dan+data[i].Nafal+data[i].Zikir+data[i].Dua+data[i].Jamayat+data[i].Khoma+data[i].NotunSekha);
           
         }
       

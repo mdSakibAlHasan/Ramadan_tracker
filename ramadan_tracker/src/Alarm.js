@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import vdo from "./Asset/azan.mp4";
 
 function App() {
-  const [alarmTime, setAlarmTime] = useState(new Date().setHours(2)); // set alarm time to 6 PM
+  const [alarmTime, setAlarmTime] = useState(new Date().setHours(12)); // set alarm time to 6 PM
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
   const [playAlarm, setPlayAlarm] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());

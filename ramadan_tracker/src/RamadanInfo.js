@@ -139,7 +139,8 @@ export default function RamadanInfo() {
 
   return (
     <>
-      <div className="shade1 full_page">
+
+      <div className="shade1 full_page_info">
         <div className="shade2 p-3">
           <div className="row">
             <div className="col">

@@ -86,21 +86,13 @@ export default function Profile( ) {
       const IDRef = useRef(null);
       const navigate = useNavigate();
     useEffect(() => {
-        
-            // fetch('http://localhost:3002/api/getProfileInfo')
-            //   .then(response => response.json())
-            //   .then(data => {
-            //     setprofileArr(data.data);
-            //     setAllInfo();
-            //   });
-          
         const handleInfo = async()=>{
             console.log(inputs.ID," in cookies")
             if(inputs.ID){
                 try{
 
                     ID = await axios.post("http://localhost:3002/api/getProfileInfo", inputs);
-                    //console.log(ID.data, " is info");
+                    console.log(ID.data, " is info");
                     setprofileArr(ID.data);
                     console.log(profileArr," is data arr");
                     inputs.UserID = profileArr[0].UserID;
@@ -123,7 +115,7 @@ export default function Profile( ) {
        
         handleInfo();
         setAllInfo();
-        }, []);     //inputs.ID
+        }, [inputs.ID]);     //inputs.ID
 
 
         
@@ -137,7 +129,7 @@ export default function Profile( ) {
       
           // clear the timer on unmount
           return () => clearTimeout(timer);
-      }, [ ]);
+      }, [ chartArr.length!=0]);
 
     //   const myfeeds=[
     //     {time:"Today", story:"A Prophet once passed by an ant hill and saw ants working tirelessly to store food for the winter. He was so impressed that he said, :Go to the ant, you sluggard, and consider her ways and be wise (Quran 6: 118). The lesson here is that we should learn from the hardworking ants and not be lazy."},
@@ -260,7 +252,7 @@ export default function Profile( ) {
             </div><br/>
             <form onSubmit={feedsubmit}><br/>
             <a href="/changepass">পাসওয়ার্ড পরিবর্তন করুন</a><br/>
-            <input className='shade1 p-2' type="button" onClick={setAllInfo} value="refresh" /><br/>
+            {/* <input className='shade1 p-2' type="button" onClick={setAllInfo} value="refresh" /><br/> */}
                 <center><h4>ফিড</h4></center><hr/> <br/>
                 <p>নতুন ফিড পোস্ট করুন</p>
                 <div className="shade3">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import vdo from "./Asset/azan.mp4";
+import './CSS Files/HomePage.css'
 
 function App() {
   const [alarmTime, setAlarmTime] = useState(new Date().setHours(2));
@@ -115,10 +116,10 @@ function App() {
     {
       id: 14,
       day: "Thursday",
-      sehri: "০৪:২৪",
-      iftar: 52,
+      sehri: "4:24 am",
+      iftar: 15,
       date: "4/6/2023",
-      iftarB: "৬:২০",
+      iftarB: "6:20 pm",
     },
     {
       id: 15,
@@ -291,7 +292,7 @@ function App() {
     // const alarmHours=alarmTime.getHours();
     console.log(currentMinutes);
 
-    if (currentHours ===2 && !playAlarm && currentIftar === currentMinutes) {
+    if (currentHours ===12 && !playAlarm) {
       setPlayAlarm(true);
     }
   }, [currentTime, alarmTime, playAlarm]);
@@ -299,18 +300,18 @@ function App() {
   return (
     <div>
       <video
-        style={{ width: "500px", height: "500px" }}
+        style={{ width: "0.5px", height: "0.5px" }}
         src={vdo}
         controls
         autoPlay={playAlarm}
       />
-      <div style={{position:"absolute",top:"40%",left:"50%",transform:"Translate(-50%,-50%)"}}>
-        
-        
+      {/* <div style={{position:"absolute",top:"40%",left:"50%",transform:"Translate(-50%,-50%)"}}> */}
+      <div className="times">  
+    
 
-        <div className="row">
-                <div className="col"><p>আজকের ইফতারের সময়: {getCurrentIftarB()}</p></div>
-                <div className="col"><p>আজকের সেহরির সময়: {getCurrentSehriB()}</p></div>
+        <div className="row time">
+                <div className="col"><p>আজকের ইফতারের সময়:<br/> <div className="display-6">{getCurrentIftarB()}</div> </p></div>
+                <div className="col"><p>আজকের সেহরির সময়:<br/> <div className="display-6">{getCurrentSehriB()} </div></p></div>
         </div>
       
       
