@@ -20,7 +20,7 @@ export const getProgressInfo = (req,res)=>{
         return res.status(409).json("not able to get data");
     }
     else{ 
-        console.log("sucess to get progress info",data);
+        console.log("sucess to get progress info");
         return res.status(200).send(data);
     }  
     });

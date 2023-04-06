@@ -48,7 +48,7 @@ export default function Login() {
                     <input type="password"  id="q2" placeholder="আপনার পাসওয়ার্ড দিন" name="password" onChange={handleChange}/>
                 </div> <hr/> <br/>
                 <center>
-                    {err && <p>err</p>}
+                    {err && <p>{err}</p>}
                     <input className='shade1 p-2' type="submit" value="লগ-ইন করুন" onClick={submitForm}/>
                 </center>
             </form> <br/>

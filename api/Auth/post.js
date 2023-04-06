@@ -9,44 +9,19 @@ export const getFeed = (req, res) => {
         console.log("Something happend for get feed data");
       }
       else{
-        console.log(result)
+        //console.log(result)
+        console.log("Successfully feed complete")
          return res.status(200).send(result);
        }
     });
 }
 
-// const getID= (value) =>{
-//     //      //code here get ID from cookies
-//     Jwt.verify(value, "jwtkey", (err, userInfo) => {
-//         if (err){ 
-//           //return res.status(403).json("Token is not valid!");
-//           console.log("Error in token");
-//         }else{
-//           const email = userInfo.Email;
-//           const q = `SELECT UserID FROM ramadan.users WHERE Email ='${email}';`;
-//           console.log(q);
-//           db.query(q,function(err,result){
-//             if(err){
-//               console.log("Something happend for get ID from cookies");
-//             }
-//             else{
-//               console.log(result[0].UserID, " in ID")
-//               console.log(result, " in ID")
-//               return result[0].UserID;
-//              }
-//           });
-//         }
-//     })
 
-//     //return 11;
 // }
 
 
 export const getPostInfo = (req, res) => {
       const{FeedID,ID} = req.body;
-      //console.log(FeedID," ---- ",ID)
-      // const UserID = getID(ID);
-      // console.log(FeedID," ---- ",UserID)
       var myArr = [0,0,0]
 
       Jwt.verify(ID, "jwtkey", (err, userInfo) => {
@@ -84,11 +59,10 @@ export const getPostInfo = (req, res) => {
                     console.log("Something happend for get secode data");
                   }
                   else{
-                    //console.log(result[0]['COUNT(*)'], " second")
-                    //return res.status(200).send(result);
+                    
                     myArr[1] = result[0]['COUNT(*)'];
                     myArr[2] = UserID;
-                    console.log(myArr,FeedID)
+                    console.log("post info success")
                     return res.status(200).send(myArr);
                   }
                 });
@@ -192,8 +166,8 @@ export const getOwnPost = (req, res) => {
 }
 
 export const setPost = (req, res) => {
-  const { post,feedDate,ID} = req.body;
-  console.log(post,feedDate,ID);
+  const {token, post,feedDate,ID} = req.body;
+  console.log(post,feedDate,ID,token);
   var qur = `insert into ramadan.feed(OwnerID,Date,post) values(${ID},'${feedDate}','${post}');`;
   console.log(qur);
   db.query(qur,function(err,result){

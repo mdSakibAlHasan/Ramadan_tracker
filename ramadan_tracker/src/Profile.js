@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Doughnut } from 'react-chartjs-2';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import Footer from './Footer';
@@ -76,14 +76,14 @@ export default function Profile( ) {
                 setaboutme(profileArr[0].AboutMe);
             }
 
-            //if(chartArr.length!=0){
+            if(chartArr.length!=0){
                 setnamazPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])},{name:'Namaz',value:100 - getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[0])}]);
                 setquranPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[1])}]);
                 setotherPercentage([{name:'Namaz',value:getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])},{name:'Namaz',value:100-getRamadanDay(time.getMonth() + 1, time.getDate(),chartArr[2])}]);
-           // }
+            }
       }
     
-    
+      const IDRef = useRef(null);
       const navigate = useNavigate();
     useEffect(() => {
         
@@ -99,15 +99,15 @@ export default function Profile( ) {
             if(inputs.ID){
                 try{
 
-                    ID = await axios.post("http://localhost:3002/api/getProfileInfo",inputs);
-                    console.log(ID," is info");
+                    ID = await axios.post("http://localhost:3002/api/getProfileInfo", inputs);
+                    //console.log(ID.data, " is info");
                     setprofileArr(ID.data);
                     console.log(profileArr," is data arr");
                     inputs.UserID = profileArr[0].UserID;
 
                     ID = await axios.post("http://localhost:3002/api/getChartInfo",inputs);
                      setChartArr(ID.data);
-                    console.log(" complete", chartArr);
+                    console.log(" complete here", chartArr);
 
                     ID = await axios.post("http://localhost:3002/api/getOwmPost",inputs);
                     setOwnFeeds(ID.data)
@@ -155,6 +155,7 @@ export default function Profile( ) {
             post:newfeed,
             feedDate,
             ID:inputs.UserID,
+            token:inputs.ID,
         }
         await axios.post("http://localhost:3002/api/setPost",postInfo);
         navigate("/feeds")

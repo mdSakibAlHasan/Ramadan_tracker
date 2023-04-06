@@ -41,13 +41,13 @@ export const getProfileInfo = (req, res) => {
 
 export const getChartInfo = (req, res) => {
   const { UserID } = req.body;
-  console.log(UserID," is here");
+  console.log(UserID," is in get chart info here");
 
  
     const q = `SELECT * FROM ramadan.progress WHERE ID =${UserID};`;
     db.query(q, [req.body.email], (err, data) => {
       if(err){
-        console.log("Something happend to get ProfileInfo");
+        console.log("Something happend to get progress info");
         //return res.status(409).json("not authorize to get data");
       }
       else{ 
